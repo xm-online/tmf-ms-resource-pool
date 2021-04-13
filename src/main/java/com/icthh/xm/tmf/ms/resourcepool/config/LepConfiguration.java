@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 
 @Configuration
-@EnableLepServices(basePackages = "com.icthh.xm.tmf.ms.prepaybalance")
+@EnableLepServices(basePackages = "com.icthh.xm.tmf.ms.resourcepool")
 public class LepConfiguration extends WebLepSpringConfiguration {
 
     @Value("${application.lep.tenant-script-storage}")

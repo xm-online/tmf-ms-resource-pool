@@ -47,8 +47,6 @@ spring:
       hibernate.generate_statistics: false
       hibernate.hbm2ddl.auto: validate
       hibernate.jdbc.time_zone: UTC
-  liquibase:
-    contexts: test
   mail:
     host: localhost
   main:
@@ -117,3 +115,15 @@ jhipster:
 # ===================================================================
 
 # application:
+
+# application:
+xm-config:
+  enabled: false
+
+application:
+  kafka-system-topic: system_topic
+  kafka-system-queue: system_queue
+  tenant-ignored-path-list: /swagger-resources/configuration/ui, /management/health, /oauth/token_key, /h2-console
+  lep:
+    tenant-script-storage: XM_MS_CONFIG
+    lep-resource-path-pattern: /config/tenants/{tenantName}/entity/lep/resources/**/*

@@ -21,7 +21,6 @@ plugins {
     id "net.ltgt.apt-eclipse"
     id "net.ltgt.apt-idea"
     id "net.ltgt.apt"
-    id "org.liquibase.gradle"
     id "org.sonarqube"
     id "io.spring.nohttp"
     id "war"
@@ -60,14 +59,14 @@ checkstyle {
     ignoreFailures = true
     configFile = rootProject.file('./qa/checkstyle.xml')
 }
-
-apply plugin: 'pmd'
-pmd {
-    rulePriority = 3
-    toolVersion = '6.0.0'
-    ignoreFailures = true
-    ruleSetFiles = files("./qa/pmd.xml")
-}
+//
+//apply plugin: 'pmd'
+//pmd {
+//    rulePriority = 3
+//    toolVersion = '6.0.0'
+//    ignoreFailures = true
+//    ruleSetFiles = files("./qa/pmd.xml")
+//}
 
 if (project.hasProperty("gae")) {
     apply plugin: 'maven'
@@ -110,7 +109,7 @@ springBoot {
 
 
 bootWar {
-    mainClassName = 'com.icthh.xm.tmf.ms.prepaybalance.ResourcepoolApp'
+    mainClassName = 'com.icthh.xm.tmf.ms.resourcepool.ResourcepoolApp'
     manifest {
         attributes(
             "Implementation-Version": archiveVersion
@@ -133,23 +132,23 @@ test {
     }
 }
 
-//task integrationTest(type: Test) {
-//    useJUnitPlatform()
-//    description = "Execute integration tests."
-//    group = "verification"
-//    include "**/*IT*", "**/*IntTest*"
-//
-//    testLogging {
-//        events 'FAILED', 'SKIPPED'
-//    }
-//
-//    reports.html.enabled = true
-//    testLogging {
-//        events = ["passed", "failed", "skipped", "standardOut", "standardError"]
-//        showStandardStreams = true
-//        exceptionFormat = 'full'
-//    }
-//}
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+    description = "Execute integration tests."
+    group = "verification"
+    include "**/*IT*", "**/*IntTest*"
+
+    testLogging {
+        events 'FAILED', 'SKIPPED'
+    }
+
+    reports.html.enabled = true
+    testLogging {
+        events = ["passed", "failed", "skipped", "standardOut", "standardError"]
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+}
 
 task cucumberTest(type: Test) {
     description = "Execute cucumber BDD tests."
@@ -169,11 +168,11 @@ task testReport(type: TestReport) {
     destinationDir = file("$buildDir/reports/tests")
     reportOn test
 }
-//
-//task integrationTestReport(type: TestReport) {
-//    destinationDir = file("$buildDir/reports/tests")
-//    reportOn integrationTest
-//}
+
+task integrationTestReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/tests")
+    reportOn integrationTest
+}
 
 task cucumberTestReport(type: TestReport) {
     destinationDir = file("$buildDir/reports/tests")
@@ -184,35 +183,7 @@ if (!project.hasProperty("runList")) {
     project.ext.runList = "main"
 }
 
-project.ext.diffChangelogFile = "src/main/resources/config/liquibase/changelog/" + new Date().format("yyyyMMddHHmmss") + "_changelog.xml"
 
-liquibase {
-    activities {
-        main {
-            driver ""
-            url ""
-            username "resourcepool"
-            password ""
-            changeLogFile "src/main/resources/config/liquibase/master.xml"
-            defaultSchemaName ""
-            logLevel "debug"
-            classpath "src/main/resources/"
-        }
-        diffLog {
-            driver ""
-            url ""
-            username "resourcepool"
-            password ""
-            changeLogFile project.ext.diffChangelogFile
-            referenceUrl "hibernate:spring:com.icthh.xm.tmf.ms.resourcepool.domain?dialect=&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy"
-            defaultSchemaName ""
-            logLevel "debug"
-            classpath "$buildDir/classes/java/main"
-        }
-    }
-
-    runList = project.ext.runList
-}
 
 gitProperties {
     failOnNoGitDirectory = false
@@ -235,7 +206,6 @@ configurations {
         resolutionStrategy {
             // Inherited version from Spring Boot can't be used because of regressions:
             // To be removed as soon as spring-boot use the same version
-            force 'org.liquibase:liquibase-core:3.9.0'
         }
     }
 }
@@ -283,10 +253,6 @@ dependencies {
     implementation "javax.transaction:javax.transaction-api"
     implementation "org.hibernate:hibernate-entitymanager"
     implementation "org.hibernate.validator:hibernate-validator"
-    implementation "org.liquibase:liquibase-core"
-    liquibaseRuntime "org.liquibase:liquibase-core"
-    liquibaseRuntime "org.liquibase.ext:liquibase-hibernate5:${liquibase_hibernate5_version}"
-    liquibaseRuntime sourceSets.main.compileClasspath
     implementation "org.springframework.boot:spring-boot-loader-tools"
     implementation "org.springframework.boot:spring-boot-starter-mail"
     implementation "org.springframework.boot:spring-boot-starter-logging"
@@ -334,9 +300,7 @@ dependencies {
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunit_junit5_version}"
     testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunit_junit5_version}"
     testImplementation "com.h2database:h2"
-    liquibaseRuntime "com.h2database:h2"
     implementation "com.oracle.database.jdbc:ojdbc8"
-    liquibaseRuntime "com.oracle.database.jdbc:ojdbc8"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
     testCompileOnly "org.projectlombok:lombok:${lombok_version}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombok_version}"
