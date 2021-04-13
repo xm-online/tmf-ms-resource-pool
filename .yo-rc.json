@@ -20,7 +20,7 @@
     "messageBroker": false,
     "serviceDiscoveryType": "consul",
     "buildTool": "gradle",
-    "enableSwaggerCodegen": false,
+    "enableSwaggerCodegen": true,
     "jwtSecretKey": "NzZjNDE5MDViNjEzYzE2ODEwYjc2ZjJjNzQwNjk2NGU3NDg2ZGVkYzJjZGM2ZGQ3YjEzNmQ2NjNlOTYzZDgyOTFkYWQ5OGM1YmFhNWU5YzE0NzM3ZjA2ZDFhNDg2YzY3NjM1NGZjZjBkMGNhMGNiMGE5MzEyMzZiOTBlYzdkNDQ=",
     "embeddableLaunchScript": false,
     "creationTimestamp": 1618223067977,

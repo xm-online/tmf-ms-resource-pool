@@ -59,14 +59,14 @@ checkstyle {
     ignoreFailures = true
     configFile = rootProject.file('./qa/checkstyle.xml')
 }
-//
-//apply plugin: 'pmd'
-//pmd {
-//    rulePriority = 3
-//    toolVersion = '6.0.0'
-//    ignoreFailures = true
-//    ruleSetFiles = files("./qa/pmd.xml")
-//}
+
+apply plugin: 'pmd'
+pmd {
+    rulePriority = 3
+    toolVersion = '6.0.0'
+    ignoreFailures = true
+    ruleSetFiles = files("./qa/pmd.xml")
+}
 
 if (project.hasProperty("gae")) {
     apply plugin: 'maven'
