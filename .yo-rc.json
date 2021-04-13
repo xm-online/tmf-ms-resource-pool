@@ -1,0 +1,38 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.icthh.xm.tmf.ms.resourcepool"
+    },
+    "jhipsterVersion": "6.10.5",
+    "applicationType": "microservice",
+    "baseName": "resourcepool",
+    "packageName": "com.icthh.xm.tmf.ms.resourcepool",
+    "packageFolder": "com/icthh/xm/tmf/ms/resourcepool",
+    "serverPort": "8717",
+    "authenticationType": "uaa",
+    "uaaBaseName": "uaa",
+    "cacheProvider": "no",
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Memory",
+    "prodDatabaseType": "oracle",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": "consul",
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "NzZjNDE5MDViNjEzYzE2ODEwYjc2ZjJjNzQwNjk2NGU3NDg2ZGVkYzJjZGM2ZGQ3YjEzNmQ2NjNlOTYzZDgyOTFkYWQ5OGM1YmFhNWU5YzE0NzM3ZjA2ZDFhNDg2YzY3NjM1NGZjZjBkMGNhMGNiMGE5MzEyMzZiOTBlYzdkNDQ=",
+    "embeddableLaunchScript": false,
+    "creationTimestamp": 1618223067977,
+    "testFrameworks": ["gatling", "cucumber"],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "clientPackageManager": "npm",
+    "blueprints": [],
+    "skipClient": true,
+    "skipUserManagement": true
+  }
+}
