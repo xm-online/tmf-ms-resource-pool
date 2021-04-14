@@ -44,7 +44,7 @@ public class LoggingAspect {
      */
     @Pointcut("within(com.icthh.xm.tmf.ms.resourcepool.repository..*)"+
         " || within(com.icthh.xm.tmf.ms.resourcepool.service..*)"+
-        " || within(com.icthh.xm.tmf.ms.resourcepool.web.rest..*)")
+        " || within(com.icthh.xm.tmf.ms.resourcepool.web.v1..*)")
     public void applicationPackagePointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }

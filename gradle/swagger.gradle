@@ -15,8 +15,8 @@ task openApiGenerateV1(type: org.openapitools.generator.gradle.plugin.tasks.Gene
     generatorName = "spring"
     inputSpec = "$rootDir/src/main/resources/swagger/api.yml".toString()
     outputDir = "$buildDir/openapi".toString()
-    apiPackage = "com.icthh.xm.tmf.ms.resourcepool.web.api"
-    modelPackage = "com.icthh.xm.tmf.ms.resourcepool.web.api.model"
+    apiPackage = "com.icthh.xm.tmf.ms.resourcepool.web.v1.api"
+    modelPackage = "com.icthh.xm.tmf.ms.resourcepool.web.v1.api.model"
     apiFilesConstrainedTo = [""]
     modelFilesConstrainedTo = [""]
     supportingFilesConstrainedTo = ["ApiUtil.java"]
