@@ -1,4 +1,4 @@
-package com.icthh.xm.tmf.ms.resourcepool.repository.timezone;
+package com.icthh.xm.tmf.ms.resourcepool.persistence.repository.timezone;
 
 import javax.persistence.*;
 import java.io.Serializable;

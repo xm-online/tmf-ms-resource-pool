@@ -42,7 +42,7 @@ public class LoggingAspect {
     /**
      * Pointcut that matches all Spring beans in the application's main packages.
      */
-    @Pointcut("within(com.icthh.xm.tmf.ms.resourcepool.repository..*)"+
+    @Pointcut("within(com.icthh.xm.tmf.ms.resourcepool.persistence.repository..*)"+
         " || within(com.icthh.xm.tmf.ms.resourcepool.service..*)"+
         " || within(com.icthh.xm.tmf.ms.resourcepool.web.v1..*)")
     public void applicationPackagePointcut() {

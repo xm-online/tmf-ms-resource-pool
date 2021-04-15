@@ -2,8 +2,8 @@ package com.icthh.xm.tmf.ms.resourcepool.config.timezone;
 
 import com.icthh.xm.tmf.ms.resourcepool.ResourcepoolApp;
 import com.icthh.xm.tmf.ms.resourcepool.config.SecurityBeanOverrideConfiguration;
-import com.icthh.xm.tmf.ms.resourcepool.repository.timezone.DateTimeWrapper;
-import com.icthh.xm.tmf.ms.resourcepool.repository.timezone.DateTimeWrapperRepository;
+import com.icthh.xm.tmf.ms.resourcepool.persistence.repository.timezone.DateTimeWrapper;
+import com.icthh.xm.tmf.ms.resourcepool.persistence.repository.timezone.DateTimeWrapperRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

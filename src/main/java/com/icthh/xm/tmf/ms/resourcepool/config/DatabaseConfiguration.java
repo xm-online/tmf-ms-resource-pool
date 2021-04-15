@@ -11,12 +11,14 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.sql.SQLException;
 
 @Configuration
-@EnableJpaRepositories("com.icthh.xm.tmf.ms.resourcepool.repository")
+@EnableJpaRepositories("com.icthh.xm.tmf.ms.resourcepool.persistence")
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 @EnableTransactionManagement
 public class DatabaseConfiguration {
@@ -27,6 +29,11 @@ public class DatabaseConfiguration {
 
     public DatabaseConfiguration(Environment env) {
         this.env = env;
+    }
+
+    @Bean
+    public JpaVendorAdapter jpaVendorAdapter() {
+        return new HibernateJpaVendorAdapter();
     }
 
     /**

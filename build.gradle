@@ -228,7 +228,7 @@ dependencies {
     implementation "com.icthh.xm.commons:xm-commons-ms-web:${xm_commons_version}"
     implementation "com.icthh.xm.commons:xm-commons-lep:${xm_commons_version}"
     implementation "com.icthh.xm.commons:xm-commons-ms-web:${xm_commons_version}"
-
+    implementation "com.icthh.xm.commons:xm-commons-i18n:${xm_commons_version}"
 
     // import JHipster dependencies BOM
     if (!project.hasProperty("gae")) {
@@ -261,6 +261,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     testImplementation "org.testcontainers:oracle-xe"
     implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "com.itsmartflex.ms.foris:itsf-ms-foris-swagger-api:0.0.2-SNAPSHOT" // should be deleted
     implementation ("org.springframework.boot:spring-boot-starter-web") {
         exclude module: "spring-boot-starter-tomcat"
     }
