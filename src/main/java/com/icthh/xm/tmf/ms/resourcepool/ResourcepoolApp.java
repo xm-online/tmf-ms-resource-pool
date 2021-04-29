@@ -1,6 +1,5 @@
 package com.icthh.xm.tmf.ms.resourcepool;
 
-import com.icthh.xm.tmf.ms.resourcepool.client.OAuth2InterceptedFeignConfiguration;
 import com.icthh.xm.tmf.ms.resourcepool.config.ApplicationProperties;
 
 import io.github.jhipster.config.DefaultProfileUtil;
@@ -10,10 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
@@ -24,6 +22,7 @@ import java.util.Collection;
 
 @SpringBootApplication(scanBasePackages = { "com.icthh.xm", "com.icthh.xm.tmf.ms.resourcepool" })
 @EnableConfigurationProperties({ApplicationProperties.class})
+@EnableAutoConfiguration
 public class ResourcepoolApp {
 
     private static final Logger log = LoggerFactory.getLogger(ResourcepoolApp.class);

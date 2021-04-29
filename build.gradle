@@ -283,6 +283,9 @@ dependencies {
     implementation "org.springframework.security.oauth:spring-security-oauth2"
     implementation "org.springframework.security:spring-security-jwt"
     implementation "org.glassfish.jaxb:jaxb-runtime:${jaxb_runtime_version}"
+    implementation "com.icthh.xm.commons:xm-commons-scheduler:${xm_commons_version}"
+    implementation "org.apache.kafka:kafka-clients"
+
     implementation ("io.springfox:springfox-swagger2") {
         exclude module: "mapstruct"
     }
