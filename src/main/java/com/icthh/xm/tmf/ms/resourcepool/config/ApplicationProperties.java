@@ -27,7 +27,9 @@ public class ApplicationProperties {
     private final Lep lep = new Lep();
     private final Retry retry = new Retry();
 
+
     private List<String> tenantIgnoredPathList = Collections.emptyList();
+    private List<KafkaTopic> kafkaTopics = Collections.emptyList();
 
     @Getter
     @Setter
@@ -42,5 +44,13 @@ public class ApplicationProperties {
         private int maxAttempts;
         private long delay;
         private int multiplier;
+    }
+
+    @Getter
+    @Setter
+    public static class KafkaTopic {
+        private String  name;
+        private Integer partitions;
+        private Integer replicas;
     }
 }
