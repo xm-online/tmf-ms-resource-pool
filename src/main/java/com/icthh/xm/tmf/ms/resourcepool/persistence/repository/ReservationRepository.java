@@ -3,14 +3,16 @@ package com.icthh.xm.tmf.ms.resourcepool.persistence.repository;
 import com.icthh.xm.tmf.ms.resourcepool.persistence.Reservation;
 import com.icthh.xm.tmf.ms.resourcepool.persistence.Status;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 /**
  * Repository for {@link Reservation}
  */
 @Repository
-public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+public interface ReservationRepository extends PagingAndSortingRepository<Reservation, Long> {
 
     /**
      * Check if exits by reservedMsisdn
@@ -29,12 +31,22 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     long countByInitiatorMsisdnAndStatus(String initiatorMsisdn, Status status);
 
 
-    /**gi
+    /**
      * Get reservation by code
      *
      * @param reservationCode
      * @return
      */
     List<Reservation> findByReservationCode(String reservationCode);
+
+
+    /**
+     *  Get reservation with limit and offset
+     * @param status
+     * @param batchRequest
+     * @return
+     */
+    List<Reservation> findByStatus(Status status, BatchRequest batchRequest);
+
 
 }
