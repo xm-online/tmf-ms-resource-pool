@@ -2,7 +2,6 @@ package com.icthh.xm.tmf.ms.resourcepool.persistence;
 
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,5 +53,8 @@ public class Reservation {
     private BigDecimal reservationPrice;
     @Column
     private String reservationCode;
-
+    @Column
+    private String customerLang;
+    @Column
+    private Boolean isTimeoutNotified;
 }

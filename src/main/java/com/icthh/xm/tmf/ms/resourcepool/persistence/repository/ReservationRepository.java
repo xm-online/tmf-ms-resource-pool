@@ -2,6 +2,8 @@ package com.icthh.xm.tmf.ms.resourcepool.persistence.repository;
 
 import com.icthh.xm.tmf.ms.resourcepool.persistence.Reservation;
 import com.icthh.xm.tmf.ms.resourcepool.persistence.Status;
+import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -41,12 +43,20 @@ public interface ReservationRepository extends PagingAndSortingRepository<Reserv
 
 
     /**
-     *  Get reservation with limit and offset
+     * Get reservation with limit and offset
+     *
      * @param status
      * @param batchRequest
      * @return
      */
-    List<Reservation> findByStatus(Status status, BatchRequest batchRequest);
+    List<Reservation> findByStatusAndCreateDateLessThanEqualAndIsTimeoutNotified(Status status, OffsetDateTime currentDate, Boolean isTimeoutNotified, BatchRequest batchRequest);
 
-
+    /**
+     * Get reservation with limit and offset
+     *
+     * @param status
+     * @param batchRequest
+     * @return
+     */
+    List<Reservation> findByStatusAndCreateDateLessThanEqual(Status status, OffsetDateTime currentDate, BatchRequest batchRequest);
 }
