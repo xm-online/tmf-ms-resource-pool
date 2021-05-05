@@ -52,6 +52,8 @@ public class Reservation {
     @Column
     private BigDecimal reservationPrice;
     @Column
+    private String reservationCategory;
+    @Column
     private String reservationCode;
     @Column
     private String customerLang;
