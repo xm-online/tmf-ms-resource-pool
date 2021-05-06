@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(readOnly = true)
-public class ReservationRepositoryCriteria {
+public class ReservationEntityRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
