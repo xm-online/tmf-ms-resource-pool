@@ -41,22 +41,4 @@ public interface ReservationRepository extends PagingAndSortingRepository<Reserv
      */
     List<Reservation> findByReservationCode(String reservationCode);
 
-
-    /**
-     * Get reservation with limit and offset
-     *
-     * @param status
-     * @param batchRequest
-     * @return
-     */
-    List<Reservation> findByStatusAndCreateDateLessThanEqualAndIsTimeoutNotified(Status status, OffsetDateTime currentDate, Boolean isTimeoutNotified, BatchRequest batchRequest);
-
-    /**
-     * Get reservation with limit and offset
-     *
-     * @param status
-     * @param batchRequest
-     * @return
-     */
-    List<Reservation> findByStatusAndCreateDateLessThanEqual(Status status, OffsetDateTime currentDate, BatchRequest batchRequest);
 }

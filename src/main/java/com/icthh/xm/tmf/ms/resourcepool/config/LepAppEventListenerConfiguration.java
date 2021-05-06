@@ -5,6 +5,7 @@ import com.icthh.xm.commons.config.client.service.TenantConfigService;
 import com.icthh.xm.commons.lep.commons.CommonsService;
 import com.icthh.xm.commons.permission.service.PermissionCheckService;
 import com.icthh.xm.tmf.ms.resourcepool.lep.XmMsLepProcessingApplicationListener;
+import com.icthh.xm.tmf.ms.resourcepool.persistence.ReservationRepositoryCriteria;
 import com.icthh.xm.tmf.ms.resourcepool.persistence.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +26,8 @@ public class LepAppEventListenerConfiguration {
         CommonsService commonsService,
         PermissionCheckService permissionCheckService,
         KafkaTemplate<String, String> kafkaTemplate,
-        ReservationRepository reservationRepository) {
+        ReservationRepository reservationRepository,
+        ReservationRepositoryCriteria repositoryCriteria) {
 
         return new XmMsLepProcessingApplicationListener(
             tenantConfigService,
@@ -33,6 +35,7 @@ public class LepAppEventListenerConfiguration {
             commonsService,
             permissionCheckService,
             kafkaTemplate,
-            reservationRepository);
+            reservationRepository,
+            repositoryCriteria);
     }
 }
