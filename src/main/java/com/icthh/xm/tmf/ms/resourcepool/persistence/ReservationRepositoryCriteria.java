@@ -1,6 +1,5 @@
 package com.icthh.xm.tmf.ms.resourcepool.persistence;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -43,7 +42,7 @@ public class ReservationRepositoryCriteria {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Reservation> cq = cb.createQuery(Reservation.class);
         Root<Reservation> root = cq.from(Reservation.class);
-        cq.where(cb.equal(root.get("status"), status), cb.lessThanOrEqualTo(root.get("validFor"), LocalDateTime.now()));
+        cq.where(cb.equal(root.get("status"), status), cb.lessThanOrEqualTo(root.get("validFor"), OffsetDateTime.now()));
         cq.select(root);
         return entityManager.createQuery(cq).setMaxResults(limit).getResultList();
     }
