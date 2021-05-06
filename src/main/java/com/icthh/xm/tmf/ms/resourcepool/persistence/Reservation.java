@@ -1,6 +1,5 @@
 package com.icthh.xm.tmf.ms.resourcepool.persistence;
 
-
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import javax.persistence.Column;
@@ -13,14 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * Reservation
- */
 @Entity
 @Table(name = "RESERVATION")
 @NoArgsConstructor
