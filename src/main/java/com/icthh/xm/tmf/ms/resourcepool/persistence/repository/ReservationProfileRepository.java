@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReservationProfileRepository extends JpaRepository<ReservationProfile, Long> {
-
     ReservationProfile findByInitiatorMsisdn(String initiatorMsisdn);
 }

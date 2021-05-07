@@ -6,6 +6,7 @@ import com.icthh.xm.commons.lep.commons.CommonsService;
 import com.icthh.xm.commons.permission.service.PermissionCheckService;
 import com.icthh.xm.tmf.ms.resourcepool.lep.XmMsLepProcessingApplicationListener;
 import com.icthh.xm.tmf.ms.resourcepool.persistence.ReservationEntityRepository;
+import com.icthh.xm.tmf.ms.resourcepool.persistence.repository.ReservationProfileRepository;
 import com.icthh.xm.tmf.ms.resourcepool.persistence.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -21,13 +22,14 @@ public class LepAppEventListenerConfiguration {
 
     @Bean
     XmMsLepProcessingApplicationListener buildLepProcessingApplicationListener(
-            TenantConfigService tenantConfigService,
-            @Qualifier("loadBalancedRestTemplate") RestTemplate restTemplate,
-            CommonsService commonsService,
-            PermissionCheckService permissionCheckService,
-            KafkaTemplate<String, String> kafkaTemplate,
-            ReservationRepository reservationRepository,
-            ReservationEntityRepository reservationEntityRepository) {
+        TenantConfigService tenantConfigService,
+        @Qualifier("loadBalancedRestTemplate") RestTemplate restTemplate,
+        CommonsService commonsService,
+        PermissionCheckService permissionCheckService,
+        KafkaTemplate<String, String> kafkaTemplate,
+        ReservationRepository reservationRepository,
+        ReservationEntityRepository reservationEntityRepository,
+        ReservationProfileRepository reservationProfileRepository) {
 
         return new XmMsLepProcessingApplicationListener(
             tenantConfigService,
@@ -36,6 +38,7 @@ public class LepAppEventListenerConfiguration {
             permissionCheckService,
             kafkaTemplate,
             reservationRepository,
-            reservationEntityRepository);
+            reservationEntityRepository,
+            reservationProfileRepository);
     }
 }

@@ -15,6 +15,7 @@ public final class LepXmAccountMsConstants {
     public static final String BINDING_SUB_KEY_TEMPLATE_KAFKA  = "kafka";
     public static final String BINDING_SUB_KEY_RESERVATION_REPOSITORY = "reservationRepository";
     public static final String BINDING_SUB_KEY_RESERVATION_ENTITY_REPOSITORY = "reservationEntityRepository";
+    public static final String BINDING_SUB_KEY_RESERVATION_PROFILE_REPOSITORY = "reservationProfileRepository";
 
     private LepXmAccountMsConstants() {
         throw new UnsupportedOperationException("Prevent creation for constructor utils class");
