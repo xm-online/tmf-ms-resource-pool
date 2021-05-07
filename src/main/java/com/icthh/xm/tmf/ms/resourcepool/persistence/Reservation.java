@@ -9,6 +9,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "RESERVATION")
+@Table
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -41,8 +43,6 @@ public class Reservation {
     @Column
     private String channel;
     @Column
-    private String initiatorMsisdn;
-    @Column
     private String reservedMsisdn;
     @Column
     private BigDecimal reservationPrice;
@@ -50,8 +50,9 @@ public class Reservation {
     private String reservationCategory;
     @Column
     private String reservationCode;
-    @Column
-    private String customerLang;
+    @ManyToOne
+    @JoinColumn(name = "reservation_profile_id")
+    private ReservationProfile reservationProfile;
     @Column
     private Boolean isTimeoutNotified;
 }
