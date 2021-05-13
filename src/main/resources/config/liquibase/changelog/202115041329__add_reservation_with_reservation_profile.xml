@@ -71,18 +71,6 @@
     </changeSet>
 
 
-    <changeSet author="mbohunenko" id="0.0.1-add-Id-RESERVATION_PROFILE">
-        <sql dbms="oracle" endDelimiter="\nGO" splitStatements="true" stripComments="true"
-             schemaName="XM_RESOURCE_POOL">
-            ALTER TABLE RESERVATION_PROFILE
-            ADD (ID number(38,0) GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE) PRIMARY KEY)
-        </sql>
-        <sql>
-            ALTER TABLE RESERVATION ADD CONSTRAINT fk_reservation_profile FOREIGN KEY (reservation_profile_id)
-            REFERENCES reservation_profile(id);
-        </sql>
-    </changeSet>
-
     <changeSet author="mbohunenko" id="0.0.2-create-sequence">
         <sql dbms="oracle" endDelimiter="\nGO" splitStatements="true" stripComments="true"
              schemaName="XM_RESOURCE_POOL">
