@@ -26,7 +26,7 @@
             </column>
             <column name="RESERVATION_CODE" type="VARCHAR(30)">
             </column>
-            <column name="BILLING_CATEGORY" type="VARCHAR(60)">
+            <column name="RESERVATION_CATEGORY" type="VARCHAR(60)">
             </column>
             <column name="CUSTOMER_LANG" type="VARCHAR(30)">
                 <constraints nullable="false"/>
@@ -34,10 +34,6 @@
             <column name="IS_TIMEOUT_NOTIFIED" type="BOOLEAN" defaultValueBoolean="false">
             </column>
             <column name="RESERVATION_PROFILE_ID" type="NUMBER"/>
-            <column name="ERROR_DESCRIPTION" type="VARCHAR(1024)">
-            </column>
-            <column name="ERROR_CORRELATION_ID" type="VARCHAR(60)">
-            </column>
         </createTable>
     </changeSet>
 
