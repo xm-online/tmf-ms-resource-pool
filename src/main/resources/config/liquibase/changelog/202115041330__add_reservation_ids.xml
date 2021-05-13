@@ -23,7 +23,7 @@
             REFERENCES reservation_profile(id);
         </sql>
         <sql>
-            create sequence reservation_code nomaxvalue, nominvalue;
+            create sequence reservation_code nomaxvalue nominvalue;
         </sql>
     </changeSet>
 
