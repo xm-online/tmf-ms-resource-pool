@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @SpringBootApplication(scanBasePackages = { "com.icthh.xm", "com.icthh.xm.tmf.ms.resourcepool" })
-@EnableConfigurationProperties({{LiquibaseProperties.class, ApplicationProperties.class})
+@EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 @EnableAutoConfiguration
 public class ResourcepoolApp {
 
