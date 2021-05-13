@@ -1,0 +1,28 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="mbohunenko"
+               id="0.0.3-add-new-columns-to-reservations">
+        <addColumn tableName="RESERVATION"  schemaName="XM_RESOURCE_POOL">
+            <column name="ERROR_DESCRIPTION"
+                    type="VARCHAR(1024)"/>
+        </addColumn>
+        <addColumn tableName="RESERVATION"  schemaName="XM_RESOURCE_POOL">
+            <column name="ERROR_CORRELATION_ID"
+                    type="VARCHAR(60)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="mbohunenko" id="0.0.3-rename-columns">
+        <renameColumn
+            oldColumnName="RESERVATION_CATEGORY"
+            newColumnName="BILLING_CATEGORY"
+            remarks="CHANGE RESERVATION_CATEGORY TO BILLING_CATEGORY"
+            schemaName="XM_RESOURCE_POOL"
+            tableName="RESERVATION"/>
+    </changeSet>
+
+</databaseChangeLog>

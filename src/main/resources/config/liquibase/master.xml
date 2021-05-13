@@ -6,4 +6,5 @@
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/202115041331__add_reservation_with_reservation_profile.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/202115041330__add_reservation_ids.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/202115041332__modify_reservation_schema.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
