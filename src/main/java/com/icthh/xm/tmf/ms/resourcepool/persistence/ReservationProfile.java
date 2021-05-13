@@ -28,7 +28,5 @@ public class ReservationProfile {
     @Column
     private String initiatorMsisdn;
     @Column
-    private String customerLang;
-    @Column
     private OffsetDateTime lockDate;
 }

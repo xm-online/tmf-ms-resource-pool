@@ -1,0 +1,76 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="mbohunenko" id="0.0.1-CREATE-RESERVATION">
+        <createTable tableName="RESERVATION" schemaName="XM_RESOURCE_POOL">
+            <column name="STATUS" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CONFIRM_DATE" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP">
+            </column>
+            <column name="MODIFY_DATE" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP">
+            </column>
+            <column name="CREATE_DATE" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VALID_FOR" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANNEL" type="VARCHAR(10)"/>
+            <column name="RESERVED_MSISDN" type="VARCHAR(30)">
+            </column>
+            <column name="NUMBER_PRICE" type="CURRENCY">
+            </column>
+            <column name="RESERVATION_CODE" type="VARCHAR(30)">
+            </column>
+            <column name="BILLING_CATEGORY" type="VARCHAR(60)">
+            </column>
+            <column name="CUSTOMER_LANG" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IS_TIMEOUT_NOTIFIED" type="BOOLEAN" defaultValueBoolean="false">
+            </column>
+            <column name="RESERVATION_PROFILE_ID" type="NUMBER"/>
+            <column name="ERROR_DESCRIPTION" type="VARCHAR(1024)">
+            </column>
+            <column name="ERROR_CORRELATION_ID" type="VARCHAR(60)">
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="mbohunenko" id="0.0.1-add-Id">
+        <sql dbms="oracle" endDelimiter="\nGO" splitStatements="true" stripComments="true"
+             schemaName="XM_RESOURCE_POOL">
+            ALTER TABLE RESERVATION
+            ADD (ID number(38,0) GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE) PRIMARY KEY)
+        </sql>
+    </changeSet>
+
+    <changeSet author="mbohunenko" id="0.0.1-CREATE-RESERVATION_PROFILE">
+        <createTable tableName="RESERVATION_PROFILE" schemaName="XM_RESOURCE_POOL">
+            <column name="INITIATOR_MSISDN" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCK_DATE" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="mbohunenko" id="0.0.1-add-Id-RESERVATION_PROFILE">
+        <sql dbms="oracle" endDelimiter="\nGO" splitStatements="true" stripComments="true"
+             schemaName="XM_RESOURCE_POOL">
+            ALTER TABLE RESERVATION_PROFILE
+            ADD (ID number(38,0) GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE) PRIMARY KEY)
+        </sql>
+        <sql>
+            ALTER TABLE RESERVATION ADD CONSTRAINT fk_reservation_profile FOREIGN KEY (reservation_profile_id)
+            REFERENCES reservation_profile(id);
+        </sql>
+        <sql>
+            create sequence reservation_code nomaxvalue, nominvalue;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

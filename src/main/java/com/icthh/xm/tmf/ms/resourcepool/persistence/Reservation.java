@@ -45,14 +45,21 @@ public class Reservation {
     @Column
     private String reservedMsisdn;
     @Column
-    private BigDecimal reservationPrice;
+    private BigDecimal numberPrice;
     @Column
-    private String reservationCategory;
+    private String billingCategory;
     @Column
     private String reservationCode;
+    @Column
+    private String customerLang;
     @ManyToOne
     @JoinColumn(name = "reservation_profile_id")
     private ReservationProfile reservationProfile;
     @Column
     private Boolean isTimeoutNotified;
+    @Column
+    private String errorDescription;
+    @Column
+    private String errorCorrelationId;
+
 }
