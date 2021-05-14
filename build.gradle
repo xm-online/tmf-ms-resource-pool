@@ -257,7 +257,6 @@ dependencies {
     implementation "com.icthh.xm.commons:xm-commons-permission:${xm_commons_version}"
     implementation "com.icthh.xm.commons:xm-commons-ms-web:${xm_commons_version}"
     implementation "com.icthh.xm.commons:xm-commons-lep:${xm_commons_version}"
-    implementation "com.icthh.xm.commons:xm-commons-ms-web:${xm_commons_version}"
     implementation "com.icthh.xm.commons:xm-commons-i18n:${xm_commons_version}"
 
     // import JHipster dependencies BOM

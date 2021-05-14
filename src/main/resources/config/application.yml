@@ -193,7 +193,7 @@ jhipster:
   mail:
     from: resourcepool@localhost
   swagger:
-    default-include-pattern: /api/.*
+    default-include-pattern: /(api|tmf-api)/.*
     title: resourcepool API
     description: resourcepool API documentation
     version: 0.0.1
