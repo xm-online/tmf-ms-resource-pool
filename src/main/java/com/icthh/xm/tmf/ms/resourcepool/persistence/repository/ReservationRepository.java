@@ -52,6 +52,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
      */
     List<Reservation> findByReservationProfileId(Long reservationProfileId);
 
-    @Query(value = "SELECT SCHEMA.reservation_code_sequence.nextval FROM dual", nativeQuery = true)
+    @Query(value = "SELECT SCHEMA.reservation_code.nextval FROM dual", nativeQuery = true)
     BigDecimal nextReservationCode();
 }
