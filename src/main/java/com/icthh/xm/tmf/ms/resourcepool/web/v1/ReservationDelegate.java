@@ -33,7 +33,7 @@ public class ReservationDelegate implements ReservationApiDelegate {
 
     @Timed
     @LogicExtensionPoint(value = "RetrieveReservation", resolver = ProfileKeyResolver.class)
-    @PreAuthorize("hasPermission({'profile': @headerRequestExtractor.profile}, 'RESOURCE.RESERVATION.RETRIVE')")
+    @PreAuthorize("hasPermission({'profile': @headerRequestExtractor.profile}, 'RESOURCE.RESERVATION.RETRIEVE')")
     @Override
     @PrivilegeDescription("Privilege to retrieve reservation")
     public ResponseEntity<List<Reservation>> retrieveReservation(String id) {
