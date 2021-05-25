@@ -19,6 +19,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
+        log.info("Received ApplicationReadyEvent");
         if (applicationProperties.isKafkaEnabled()) {
             privilegeInspector.readPrivileges(MdcUtils.getRid());
         } else {
