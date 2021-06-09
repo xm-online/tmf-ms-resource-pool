@@ -1,0 +1,16 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="mbohunenko"
+               id="0.0.4-add-new-columns-to-reservations">
+        <addColumn tableName="RESERVATION"  schemaName="XM_RESOURCE_POOL">
+            <column name="SERVICE_COST"
+                    type="CURRENCY"/>
+        </addColumn>
+    </changeSet>
+
+
+</databaseChangeLog>

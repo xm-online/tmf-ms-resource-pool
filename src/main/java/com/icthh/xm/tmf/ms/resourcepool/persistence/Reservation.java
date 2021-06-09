@@ -58,8 +58,9 @@ public class Reservation {
     @Column
     private Boolean isTimeoutNotified;
     @Column
+    private BigDecimal serviceCost;
+    @Column
     private String errorDescription;
     @Column
     private String errorCorrelationId;
-
 }
