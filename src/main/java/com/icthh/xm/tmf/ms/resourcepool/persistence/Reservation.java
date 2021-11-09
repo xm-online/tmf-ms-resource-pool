@@ -45,8 +45,6 @@ public class Reservation {
     @Column
     private String reservedMsisdn;
     @Column
-    private BigDecimal numberPrice;
-    @Column
     private String billingCategory;
     @Column
     private String reservationCode;
