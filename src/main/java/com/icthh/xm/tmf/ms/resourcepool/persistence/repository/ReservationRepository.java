@@ -54,4 +54,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query(value = "SELECT reservation_code.nextval FROM dual", nativeQuery = true)
     BigDecimal nextReservationCode();
+
+    List<Reservation> findByReservationInitiatorAndModifyDateGreaterThanEqual(String reservationInitiator, OffsetDateTime date);
 }
