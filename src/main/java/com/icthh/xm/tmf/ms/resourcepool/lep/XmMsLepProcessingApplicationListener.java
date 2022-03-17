@@ -17,7 +17,6 @@ import com.icthh.xm.commons.lep.spring.SpringLepProcessingApplicationListener;
 import com.icthh.xm.commons.permission.service.PermissionCheckService;
 import com.icthh.xm.lep.api.ScopedContext;
 import com.icthh.xm.tmf.ms.resourcepool.persistence.ReservationEntityRepository;
-import com.icthh.xm.tmf.ms.resourcepool.persistence.repository.ReservationProfileRepository;
 import com.icthh.xm.tmf.ms.resourcepool.persistence.repository.ReservationRepository;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +39,6 @@ public class XmMsLepProcessingApplicationListener extends SpringLepProcessingApp
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ReservationRepository reservationRepository;
     private final ReservationEntityRepository reservationEntityRepository;
-    private final ReservationProfileRepository reservationProfileRepository;
 
     @Override
     protected void bindExecutionContext(ScopedContext executionContext) {
@@ -50,7 +48,6 @@ public class XmMsLepProcessingApplicationListener extends SpringLepProcessingApp
         services.put(BINDING_SUB_KEY_PERMISSION_SERVICE, permissionCheckService);
         services.put(BINDING_SUB_KEY_RESERVATION_REPOSITORY, reservationRepository);
         services.put(BINDING_SUB_KEY_RESERVATION_ENTITY_REPOSITORY, reservationEntityRepository);
-        services.put(BINDING_SUB_KEY_RESERVATION_PROFILE_REPOSITORY, reservationProfileRepository);
 
         executionContext.setValue(BINDING_KEY_COMMONS, new CommonsExecutor(commonsService));
         executionContext.setValue(BINDING_KEY_SERVICES, services);
