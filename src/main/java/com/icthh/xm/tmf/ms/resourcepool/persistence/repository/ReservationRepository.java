@@ -34,24 +34,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @EntityGraph(attributePaths = {"reservationProfile"})
     Reservation findByReservationCode(String reservationCode);
 
-
-    /**
-     * Get reservations by initiatorMsisdn
-     *
-     * @param reservationProfileId
-     * @return
-     */
-    List<Reservation> findByReservationProfileIdAndCreateDateGreaterThanEqual(Long reservationProfileId, OffsetDateTime date);
-
-
-    /**
-     * Get reservations by initiatorMsisdn
-     *
-     * @param reservationProfileId
-     * @return
-     */
-    List<Reservation> findByReservationProfileId(Long reservationProfileId);
-
     @Query(value = "SELECT reservation_code.nextval FROM dual", nativeQuery = true)
     BigDecimal nextReservationCode();
 
