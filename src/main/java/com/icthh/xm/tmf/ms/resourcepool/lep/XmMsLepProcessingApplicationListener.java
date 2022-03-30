@@ -5,7 +5,6 @@ import static com.icthh.xm.tmf.ms.resourcepool.lep.LepXmAccountMsConstants.BINDI
 import static com.icthh.xm.tmf.ms.resourcepool.lep.LepXmAccountMsConstants.BINDING_KEY_TEMPLATES;
 import static com.icthh.xm.tmf.ms.resourcepool.lep.LepXmAccountMsConstants.BINDING_SUB_KEY_PERMISSION_SERVICE;
 import static com.icthh.xm.tmf.ms.resourcepool.lep.LepXmAccountMsConstants.BINDING_SUB_KEY_RESERVATION_ENTITY_REPOSITORY;
-import static com.icthh.xm.tmf.ms.resourcepool.lep.LepXmAccountMsConstants.BINDING_SUB_KEY_RESERVATION_PROFILE_REPOSITORY;
 import static com.icthh.xm.tmf.ms.resourcepool.lep.LepXmAccountMsConstants.BINDING_SUB_KEY_SERVICE_TENANT_CONFIG_SERVICE;
 import static com.icthh.xm.tmf.ms.resourcepool.lep.LepXmAccountMsConstants.BINDING_SUB_KEY_TEMPLATE_KAFKA;
 import static com.icthh.xm.tmf.ms.resourcepool.lep.LepXmAccountMsConstants.BINDING_SUB_KEY_TEMPLATE_REST;
