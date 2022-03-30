@@ -31,7 +31,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
      * @param reservationCode
      * @return
      */
-    @EntityGraph(attributePaths = {"reservationProfile"})
     Reservation findByReservationCode(String reservationCode);
 
     @Query(value = "SELECT reservation_code.nextval FROM dual", nativeQuery = true)

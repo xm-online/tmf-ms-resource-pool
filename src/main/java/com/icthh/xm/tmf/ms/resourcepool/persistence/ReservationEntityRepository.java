@@ -27,7 +27,6 @@ public class ReservationEntityRepository {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Reservation> cq = cb.createQuery(Reservation.class);
         Root<Reservation> root = cq.from(Reservation.class);
-        root.fetch("reservationProfile");
         cq.where(cb.equal(root.get("status"), status), cb.lessThanOrEqualTo(root.get("createDate"), currentDate), cb.equal(root.get("isTimeoutNotified"), isTimeoutNotified));
         cq.select(root);
         return entityManager.createQuery(cq).setMaxResults(limit).getResultList();
@@ -43,7 +42,6 @@ public class ReservationEntityRepository {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Reservation> cq = cb.createQuery(Reservation.class);
         Root<Reservation> root = cq.from(Reservation.class);
-        root.fetch("reservationProfile");
         cq.where(cb.equal(root.get("status"), status), cb.lessThanOrEqualTo(root.get("validFor"), OffsetDateTime.now()));
         cq.select(root);
         return entityManager.createQuery(cq).setMaxResults(limit).getResultList();
