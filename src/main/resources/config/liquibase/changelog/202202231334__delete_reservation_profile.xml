@@ -1,0 +1,26 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="dbahazhkov" id="0.0.5-add-new-columns-to-reservation">
+        <addColumn tableName="RESERVATION" schemaName="XM_RESOURCE_POOL">
+            <column name="RESERVATION_INITIATOR" type="VARCHAR(30)"/>
+            <column name="COMMERCE" type="VARCHAR(3)"/>
+        </addColumn>
+        <sql dbms="oracle" endDelimiter="\nGO" splitStatements="true" stripComments="true"
+             schemaName="XM_RESOURCE_POOL">
+            UPDATE RESERVATION r SET r.COMMERCE = 'B2C' WHERE r.COMMERCE IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet author="dbahazhkov" id="0.0.5-save-old-data-from-reservation-profile-and-delete-old-column">
+        <sql dbms="oracle" endDelimiter="\nGO" splitStatements="true" stripComments="true"
+             schemaName="XM_RESOURCE_POOL">
+            UPDATE RESERVATION r SET r.RESERVATION_INITIATOR = (SELECT rp.INITIATOR_MSISDN FROM RESERVATION_PROFILE rp WHERE rp.ID = r.RESERVATION_PROFILE_ID) WHERE r.RESERVATION_INITIATOR IS NULL
+        </sql>
+        <dropColumn schemaName="XM_RESOURCE_POOL" tableName="RESERVATION" columnName="RESERVATION_PROFILE_ID"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -9,8 +9,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,14 +43,16 @@ public class Reservation {
     @Column
     private String reservedMsisdn;
     @Column
+    private String reservationInitiator;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Commerce commerce;
+    @Column
     private String billingCategory;
     @Column
     private String reservationCode;
     @Column
     private String customerLang;
-    @ManyToOne
-    @JoinColumn(name = "reservation_profile_id")
-    private ReservationProfile reservationProfile;
     @Column
     private Boolean isTimeoutNotified;
     @Column
