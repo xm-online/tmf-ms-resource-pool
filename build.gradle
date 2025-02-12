@@ -26,6 +26,7 @@ plugins {
     id "io.spring.nohttp"
     id "war"
     id "org.openapi.generator"
+    id "org.ajoberstar.grgit" version "4.1.1"
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
 
@@ -41,7 +42,7 @@ apply from: "gradle/swagger.gradle"
 assert System.properties["java.specification.version"] == "1.8" || "11" || "12" || "13" || "14"
 
 apply from: "gradle/docker.gradle"
-apply from: "gradle/sonar.gradle"
+//apply from: "gradle/sonar.gradle"
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
 if (project.hasProperty("prod") || project.hasProperty("gae")) {
