@@ -61,4 +61,6 @@ public class Reservation {
     private String errorDescription;
     @Column
     private String errorCorrelationId;
+    @Column
+    private String externalResourceId;
 }
