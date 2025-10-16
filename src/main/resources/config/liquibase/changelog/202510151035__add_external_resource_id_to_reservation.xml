@@ -1,0 +1,15 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="tkutselia"
+               id="0.0.7-add-external-resource-id-to-reservation">
+        <addColumn tableName="RESERVATION">
+            <column name="EXTERNAL_RESOURCE_ID"
+                    type="VARCHAR(60)"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

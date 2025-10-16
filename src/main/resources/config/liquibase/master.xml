@@ -10,4 +10,5 @@
     <include file="config/liquibase/changelog/202115041333__add_service_cost.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/202202231334__delete_reservation_profile.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/202203131035__change_channel_length.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/202510151035__add_external_resource_id_to_reservation.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
