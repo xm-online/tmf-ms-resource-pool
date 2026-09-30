@@ -13,40 +13,49 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
+# To run the tests against the production database type rather than H2 (Testcontainers), activate the
+# 'testcontainers' profile, e.g. -Dspring.profiles.active=testcontainers
 spring:
-  profiles:
-    # Uncomment the following line to enable tests against production database type rather than H2, using Testcontainers
-    #active: testcontainers
   application:
     name: resourcepool
+  jackson:
+    mapper:
+      # Jackson 3 sorts properties alphabetically by default; keep the declaration order responses had before
+      sort-properties-alphabetically: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:resourcepool;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:resourcepool;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;NON_KEYWORDS=VALUE
     name:
     username:
     password:
     hikari:
       auto-commit: false
-  jackson:
-    serialization:
-      write-durations-as-timestamps: false
   jpa:
-    database-platform: io.github.jhipster.domain.util.FixedH2Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
+    database: H2
     open-in-view: false
     show-sql: false
     hibernate:
       ddl-auto: none
       naming:
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        implicit-strategy: org.springframework.boot.hibernate.SpringImplicitNamingStrategy
     properties:
-      hibernate.id.new_generator_mappings: true
       hibernate.connection.provider_disables_autocommit: true
       hibernate.cache.use_second_level_cache: false
       hibernate.cache.use_query_cache: false
       hibernate.generate_statistics: false
-      hibernate.hbm2ddl.auto: validate
+      # the Liquibase change sets are written for Oracle (schema XM_RESOURCE_POOL, Oracle-only SQL) and cannot
+      # run on H2, so the test schema is created from the entities (on master the Spring context tests failed
+      # on the Liquibase migration)
+      hibernate.hbm2ddl.auto: create-drop
       hibernate.jdbc.time_zone: UTC
+      hibernate.timezone.default_storage: NORMALIZE
+      hibernate.type.preferred_instant_jdbc_type: TIMESTAMP
+  liquibase:
+    enabled: false
+  kafka:
+    bootstrap-servers: localhost:9093
   mail:
     host: localhost
   main:
@@ -67,9 +76,25 @@ spring:
   thymeleaf:
     mode: HTML
 
+springdoc:
+  api-docs:
+    enabled: true
+
 server:
   port: 10344
   address: localhost
+
+management:
+  health:
+    mail:
+      enabled: false
+  tracing:
+    export:
+      enabled: false
+  otlp:
+    metrics:
+      export:
+        enabled: false
 
 # ===================================================================
 # JHipster specific properties
@@ -87,8 +112,9 @@ jhipster:
       enabled: false
       host: localhost
       port: 5000
-      queue-size: 512
+      ring-buffer-size: 512
   security:
+    content-security-policy: "default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com data:"
     authentication:
       jwt:
         # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
@@ -100,10 +126,6 @@ jhipster:
       token-service-id: uaa
       client-id: internal
       client-secret: internal
-  metrics:
-    logs: # Reports metrics in the logs
-      enabled: true
-      report-frequency: 60 # in seconds
 
 # ===================================================================
 # Application specific properties
@@ -114,16 +136,13 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
-
-# application:
 xm-config:
   enabled: false
 
 application:
   kafka-system-topic: system_topic
   kafka-system-queue: system_queue
-  tenant-ignored-path-list: /swagger-resources/configuration/ui, /management/health, /oauth/token_key, /h2-console
+  tenant-ignored-path-list: /swagger-resources/configuration/ui, /management/health, /oauth/token_key, /h2-console, /v3/api-docs
   lep:
     tenant-script-storage: XM_MS_CONFIG
     lep-resource-path-pattern: /config/tenants/{tenantName}/entity/lep/resources/**/*
