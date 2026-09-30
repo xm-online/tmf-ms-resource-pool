@@ -1,9 +1,6 @@
 buildscript {
     repositories {
-        mavenLocal()
-        mavenCentral()
         gradlePluginPortal()
-        maven { url "https://repo.spring.io/plugins-release" }
     }
     dependencies {
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
@@ -14,20 +11,27 @@ plugins {
     id "java"
     id "maven-publish"
     id "idea"
+    id "eclipse"
     id "jacoco"
     id "org.springframework.boot"
     id "com.google.cloud.tools.jib"
     id "com.gorylenko.gradle-git-properties"
-    id "net.ltgt.apt-eclipse"
-    id "net.ltgt.apt-idea"
-    id "net.ltgt.apt"
     id "org.liquibase.gradle"
     id "org.sonarqube"
     id "io.spring.nohttp"
+    id "com.github.spotbugs"
+    id "checkstyle"
+    id "pmd"
     id "war"
     id "org.openapi.generator"
-    id "org.ajoberstar.grgit" version "4.1.1"
+    id "io.spring.dependency-management"
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 group = "com.icthh.xm.tmf.ms.resourcepool"
@@ -35,17 +39,19 @@ version = "0.0.3-SNAPSHOT"
 
 description = ""
 
-sourceCompatibility=11
-targetCompatibility=11
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+assert System.properties["java.specification.version"] == "25"
+
 apply from: "gradle/swagger.gradle"
-
-assert System.properties["java.specification.version"] == "1.8" || "11" || "12" || "13" || "14"
-
 apply from: "gradle/docker.gradle"
-//apply from: "gradle/sonar.gradle"
+apply from: "gradle/sonar.gradle"
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
-if (project.hasProperty("prod") || project.hasProperty("gae")) {
+if (project.hasProperty("prod")) {
     apply from: "gradle/profile_prod.gradle"
 } else {
     apply from: "gradle/profile_dev.gradle"
@@ -53,38 +59,6 @@ if (project.hasProperty("prod") || project.hasProperty("gae")) {
 
 if (project.hasProperty("war")) {
     apply from: "gradle/war.gradle"
-}
-
-apply plugin: 'checkstyle'
-checkstyle {
-    toolVersion = "7.6.1"
-    ignoreFailures = true
-    configFile = rootProject.file('./qa/checkstyle.xml')
-}
-
-apply plugin: 'pmd'
-pmd {
-    rulePriority = 3
-    toolVersion = '6.0.0'
-    ignoreFailures = true
-    ruleSetFiles = files("./qa/pmd.xml")
-}
-
-if (project.hasProperty("gae")) {
-    apply plugin: 'maven'
-    apply plugin: 'org.springframework.boot.experimental.thin-launcher'
-    apply plugin: 'io.spring.dependency-management'
-
-    dependencyManagement {
-        imports {
-            mavenBom "io.github.jhipster:jhipster-dependencies:${jhipster_dependencies_version}"
-        }
-    }
-    appengineStage.dependsOn thinResolve
-}
-
-if (project.hasProperty("zipkin")) {
-    apply from: "gradle/zipkin.gradle"
 }
 
 idea {
@@ -106,12 +80,11 @@ eclipse {
 defaultTasks "bootRun"
 
 springBoot {
-    mainClassName = "com.icthh.xm.tmf.ms.resourcepool.ResourcepoolApp"
+    mainClass = "com.icthh.xm.tmf.ms.resourcepool.ResourcepoolApp"
 }
 
-
 bootWar {
-    mainClassName = 'com.icthh.xm.tmf.ms.resourcepool.ResourcepoolApp'
+    mainClass = "com.icthh.xm.tmf.ms.resourcepool.ResourcepoolApp"
     manifest {
         attributes(
             "Implementation-Version": archiveVersion
@@ -119,66 +92,56 @@ bootWar {
     }
 }
 
+Closure testLoggingConf = {
+    exceptionFormat = 'full'
+    events "passed", "skipped", "failed"//, "standardError" //, "standardOut"
+}
+
+List<String> testJvmArgs = [
+    '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+    '--add-opens', 'java.base/java.lang.reflect=ALL-UNNAMED',
+    '--add-opens', 'java.base/java.util=ALL-UNNAMED'
+]
+
+// Every test runs in `test`: unit tests and the Spring context tests (*IT, *IntTest), which used to
+// run only in the separate integrationTest task that `./gradlew test` never triggered.
+// Cucumber was removed: it had no features.
 test {
     useJUnitPlatform()
-    exclude "**/*IT*", "**/*IntTest*"
-
-    testLogging {
-        events 'FAILED', 'SKIPPED'
-    }
-    reports.html.enabled = true
-    testLogging {
-        events = ["passed", "failed", "skipped", "standardOut", "standardError"]
-        showStandardStreams = true
-        exceptionFormat = 'full'
-    }
-}
-
-task integrationTest(type: Test) {
-    useJUnitPlatform()
-    description = "Execute integration tests."
-    group = "verification"
-    include "**/*IT*", "**/*IntTest*"
-
-    testLogging {
-        events 'FAILED', 'SKIPPED'
-    }
-
-    reports.html.enabled = true
-    testLogging {
-        events = ["passed", "failed", "skipped", "standardOut", "standardError"]
-        showStandardStreams = true
-        exceptionFormat = 'full'
-    }
-}
-
-task cucumberTest(type: Test) {
-    description = "Execute cucumber BDD tests."
-    group = "verification"
-    include "**/*CucumberIT*"
-
+    jvmArgs += testJvmArgs
     // uncomment if the tests reports are not generated
     // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
     // ignoreFailures true
-    reports.html.enabled = false
+    reports.html.required = true
+    testLogging testLoggingConf
 }
 
-check.dependsOn cucumberTest
-
-//check.dependsOn integrationTest
-task testReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn test
+tasks.register('integrationTest', Test) {
+    useJUnitPlatform()
+    description = "Execute integration tests."
+    group = "verification"
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    include "**/*IT*", "**/*IntTest*"
+    jvmArgs += testJvmArgs
+    reports.html.required = true
+    testLogging testLoggingConf
 }
 
-task integrationTestReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn integrationTest
+tasks.register('testReport', TestReport) {
+    destinationDirectory = layout.buildDirectory.dir("reports/tests")
+    testResults.from(test)
 }
 
-task cucumberTestReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn cucumberTest
+tasks.register('integrationTestReport', TestReport) {
+    destinationDirectory = layout.buildDirectory.dir("reports/tests")
+    testResults.from(tasks.named('integrationTest'))
+}
+
+tasks.register('preCompileLep', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.icthh.xm.commons.lep.groovy.LepCompiler'
+    args = findProperty('exportArgs')?.split(' ')?.toList() ?: []
 }
 
 if (!project.hasProperty("runList")) {
@@ -205,10 +168,10 @@ liquibase {
             username "resourcepool"
             password ""
             changeLogFile project.ext.diffChangelogFile
-            referenceUrl "hibernate:spring:com.icthh.xm.tmf.ms.resourcepool.domain?dialect=&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy"
+            referenceUrl "hibernate:spring:com.icthh.xm.tmf.ms.resourcepool.domain?dialect=&hibernate.physical_naming_strategy=org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.hibernate.SpringImplicitNamingStrategy"
             defaultSchemaName ""
             logLevel "debug"
-            classpath "$buildDir/classes/java/main"
+            classpath "${layout.buildDirectory.get()}/classes/java/main"
         }
     }
 
@@ -220,152 +183,165 @@ gitProperties {
     keys = ["git.branch", "git.commit.id.abbrev", "git.commit.id.describe"]
 }
 
+pmd {
+    toolVersion = "${pmdToolVersion}"
+    rulesMinimumPriority = 3
+    ignoreFailures = true
+    ruleSetFiles = files("./qa/pmd.xml")
+}
+
 checkstyle {
-    toolVersion '${checkstyle_version}'
-    configFile file("checkstyle.xml")
+    toolVersion = "${checkstyleToolVersion}"
+    ignoreFailures = true
+    configFile = rootProject.file('./qa/checkstyle.xml')
     checkstyleTest.enabled = false
 }
+
+spotbugs {
+    toolVersion = "${spotbugsToolVersion}"
+    ignoreFailures = true
+}
+
 nohttp {
     source.include "build.gradle", "README.md"
 }
 
 configurations {
     providedRuntime
-    implementation.exclude module: "spring-boot-starter-tomcat"
-    all {
-        resolutionStrategy {
-            // Inherited version from Spring Boot can't be used because of regressions:
-            // To be removed as soon as spring-boot use the same version
-            force 'org.liquibase:liquibase-core:3.9.0'
-        }
-    }
 }
 
 repositories {
+    // Local maven repository is required for libraries built locally with maven like development jhipster-bom.
     mavenLocal()
     mavenCentral()
-    jcenter()
     //jhipster-needle-gradle-repositories - JHipster will add additional repositories
+    maven {
+        url "https://reposilite.jevera.software/releases"
+    }
 }
 
 dependencies {
 
-    compile "org.projectlombok:lombok:${lombok_version}"
+    compileOnly "org.projectlombok:lombok:${lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${lombok_version}"
 
-    implementation "com.icthh.xm.commons:xm-commons-logging-web:${xm_commons_version}"
-    implementation "com.icthh.xm.commons:xm-commons-logging-trace:${xm_commons_version}"
-    implementation "com.icthh.xm.commons:xm-commons-security:${xm_commons_version}"
-    implementation "com.icthh.xm.commons:xm-commons-permission:${xm_commons_version}"
-    implementation "com.icthh.xm.commons:xm-commons-ms-web:${xm_commons_version}"
-    implementation "com.icthh.xm.commons:xm-commons-lep:${xm_commons_version}"
-    implementation "com.icthh.xm.commons:xm-commons-i18n:${xm_commons_version}"
+    implementation "tech.jhipster:jhipster-framework:${jhipsterFrameworkDependenciesVersion}"
 
-    // import JHipster dependencies BOM
-    if (!project.hasProperty("gae")) {
-        implementation platform("io.github.jhipster:jhipster-dependencies:${jhipster_dependencies_version}")
-    }
-    implementation "org.openapitools:jackson-databind-nullable:${jackson_databind_nullable_version}"
-    // Use ", version: jhipster_dependencies_version, changing: true" if you want
-    // to use a SNAPSHOT release instead of a stable release
-    implementation group: "io.github.jhipster", name: "jhipster-framework"
-    implementation "javax.annotation:javax.annotation-api"
-    implementation "io.dropwizard.metrics:metrics-core"
     implementation "io.micrometer:micrometer-registry-prometheus"
     implementation "net.logstash.logback:logstash-logback-encoder"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-    implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5"
-    implementation "com.fasterxml.jackson.core:jackson-annotations"
+
+    implementation "tools.jackson.core:jackson-databind"
+    implementation "tools.jackson.datatype:jackson-datatype-hibernate7"
+    // Jackson 2 (com.fasterxml) - kept for LEP scripts
     implementation "com.fasterxml.jackson.core:jackson-databind"
-    implementation "org.hibernate:hibernate-core"
-    implementation "com.zaxxer:HikariCP"
-    implementation "javax.transaction:javax.transaction-api"
-    implementation "org.hibernate:hibernate-entitymanager"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
+    implementation "org.openapitools:jackson-databind-nullable:${jacksonDatabindNullableVersion}"
+
+    implementation "org.hibernate.orm:hibernate-core:${hibernateVersion}"
     implementation "org.hibernate.validator:hibernate-validator"
+    implementation "com.zaxxer:HikariCP"
     implementation "org.liquibase:liquibase-core"
-    liquibaseRuntime "org.liquibase:liquibase-core"
-    liquibaseRuntime "org.liquibase.ext:liquibase-hibernate5:${liquibase_hibernate5_version}"
-    liquibaseRuntime sourceSets.main.compileClasspath
-    implementation "org.springframework.boot:spring-boot-loader-tools"
+    implementation "org.apache.commons:commons-lang3"
+    implementation "commons-io:commons-io"
+    implementation "org.apache.httpcomponents.client5:httpclient5"
+    implementation "org.springframework.kafka:spring-kafka"
+    implementation "org.apache.kafka:kafka-clients"
+
     implementation "org.springframework.boot:spring-boot-starter-mail"
     implementation "org.springframework.boot:spring-boot-starter-logging"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation "org.springframework.boot:spring-boot-starter-aop"
+    implementation "org.springframework.boot:spring-boot-starter-aspectj"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-    testImplementation "org.testcontainers:oracle-xe"
+    implementation "org.springframework.boot:spring-boot-starter-liquibase"
+    implementation "org.springframework.boot:spring-boot-starter-kafka"
     implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation ("org.springframework.boot:spring-boot-starter-web") {
-        exclude module: "spring-boot-starter-tomcat"
-    }
-    implementation "org.springframework.boot:spring-boot-starter-undertow"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
-    implementation "org.zalando:problem-spring-web"
+
+    implementation "org.zalando:problem-spring-web:${zalandoVersion}"
+
     implementation "org.springframework.cloud:spring-cloud-starter"
-    implementation "org.springframework.cloud:spring-cloud-starter-netflix-ribbon"
-    implementation "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
+    implementation "org.springframework.cloud:spring-cloud-starter-bootstrap"
     implementation "org.springframework.retry:spring-retry"
     implementation "org.springframework.cloud:spring-cloud-starter-consul-discovery"
     implementation "org.springframework.cloud:spring-cloud-starter-consul-config"
-    implementation "org.springframework.cloud:spring-cloud-starter-security"
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
-    implementation "org.springframework.boot:spring-boot-starter-cloud-connectors"
+    implementation "org.springframework.cloud:spring-cloud-starter-loadbalancer"
+
     implementation "org.springframework.security:spring-security-config"
     implementation "org.springframework.security:spring-security-data"
     implementation "org.springframework.security:spring-security-web"
-    implementation "org.springframework.security.oauth:spring-security-oauth2"
-    implementation "org.springframework.security:spring-security-jwt"
-    implementation "org.glassfish.jaxb:jaxb-runtime:${jaxb_runtime_version}"
-    implementation "com.icthh.xm.commons:xm-commons-scheduler:${xm_commons_version}"
-    implementation "org.apache.kafka:kafka-clients"
 
-    implementation ("io.springfox:springfox-swagger2") {
-        exclude module: "mapstruct"
-    }
-    implementation "io.springfox:springfox-bean-validators"
-    implementation "org.mapstruct:mapstruct:${mapstruct_version}"
-    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
-    annotationProcessor "org.hibernate:hibernate-jpamodelgen:${hibernate_version}"
-    annotationProcessor "org.glassfish.jaxb:jaxb-runtime:${jaxb_runtime_version}"
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${spring_boot_version}"
-    testImplementation "io.cucumber:cucumber-junit"
-    testImplementation "io.cucumber:cucumber-spring"
-    testImplementation ("org.springframework.boot:spring-boot-starter-test") {
-    }
-    testImplementation "org.springframework.security:spring-security-test"
-    testImplementation "org.springframework.boot:spring-boot-test"
-    testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunit_junit5_version}"
-    testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunit_junit5_version}"
-    testImplementation "com.h2database:h2"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocOpenapiVersion}"
+
+    implementation "org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}"
     implementation "com.oracle.database.jdbc:ojdbc8"
-    //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
+    // came transitively with ojdbc8 19.x (wallet/TCPS, UCP, FAN); ojdbc8 23.x no longer brings them
+    // (osdt_core/osdt_cert are part of oraclepki since 23)
+    implementation "com.oracle.database.security:oraclepki"
+    implementation "com.oracle.database.jdbc:ucp"
+    implementation "com.oracle.database.ha:ons"
+    implementation "com.oracle.database.ha:simplefan"
+    liquibaseRuntime "org.liquibase:liquibase-core"
+    liquibaseRuntime "info.picocli:picocli:4.7.6"
+    liquibaseRuntime "com.oracle.database.jdbc:ojdbc8"
+    liquibaseRuntime "com.h2database:h2"
+
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    annotationProcessor "org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}"
+    annotationProcessor "org.hibernate.orm:hibernate-processor:${hibernateVersion}"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
+
+    // XM commons
+    implementation "com.icthh.xm.commons:xm-commons-i18n:${xm_commons_version}"
+    implementation "com.icthh.xm.commons:xm-commons-logging-web:${xm_commons_version}"
+    implementation "com.icthh.xm.commons:xm-commons-logging-configurable:${xm_commons_version}"
+    implementation "com.icthh.xm.commons:xm-commons-logging-trace:${xm_commons_version}"
+    implementation "com.icthh.xm.commons:xm-commons-security:${xm_commons_version}"
+    implementation "com.icthh.xm.commons:xm-commons-permission:${xm_commons_version}"
+    implementation("com.icthh.xm.commons:xm-commons-ms-web:${xm_commons_version}") {
+        exclude group: "io.github.jhipster", module: "jhipster-framework"
+    }
+    implementation "com.icthh.xm.commons:xm-commons-lep:${xm_commons_version}"
+    implementation "com.icthh.xm.commons:xm-commons-lep-groovy:${xm_commons_version}"
+    implementation "com.icthh.xm.commons:xm-commons-scheduler:${xm_commons_version}"
+    // came transitively with xm-commons 2 (metrics of LEP and web calls)
+    implementation "com.icthh.xm.commons:xm-commons-metric:${xm_commons_version}"
+
+    // Tests
     testCompileOnly "org.projectlombok:lombok:${lombok_version}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombok_version}"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-starter-webmvc-test"
+    testImplementation "org.springframework.security:spring-security-test"
+    testImplementation "org.springframework.boot:spring-boot-test"
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+    testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunitJunit5Version}"
+    testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunitJunit5Version}"
+    testImplementation "org.testcontainers:testcontainers-oracle-xe"
+    testImplementation "com.h2database:h2"
+    //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
-if (project.hasProperty("gae")) {
-    task createPom {
-        def basePath = 'build/resources/main/META-INF/maven'
-        doLast {
-            pom {
-                withXml(dependencyManagement.pomConfigurer)
-            }.writeTo("${basePath}/${project.group}/${project.name}/pom.xml")
-        }
-    }
-    bootJar.dependsOn = [createPom]
+tasks.register('stage') {
+    dependsOn 'bootWar'
 }
 
-task stage(dependsOn: 'bootWar') {
-}
-
-task cleanResources(type: Delete) {
+tasks.register('cleanResources', Delete) {
     delete "build/resources"
 }
 
 wrapper {
-    gradleVersion = "6.5"
+    gradleVersion = "9.2.1"
 }
 
-compileJava.dependsOn processResources
+compileJava {
+    dependsOn processResources
+    // add method parameters names to .class (used by LEP scripts)
+    options.compilerArgs << '-parameters'
+}
 processResources.dependsOn bootBuildInfo

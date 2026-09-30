@@ -179,6 +179,9 @@
         <exclude name="JUnitSpelling"/>
     </rule>
 
+    <rule ref="rulesets/java/logging-java.xml">
+        <exclude name="GuardLogStatementJavaUtil"/>
+    </rule>
 
     <rule ref="rulesets/java/migrating.xml"/>
 
