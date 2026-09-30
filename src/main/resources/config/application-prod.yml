@@ -16,13 +16,13 @@
 logging:
   level:
     ROOT: INFO
-    io.github.jhipster: INFO
+    tech.jhipster: INFO
     com.icthh.xm.tmf.ms.resourcepool: INFO
 
 management:
-  metrics:
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: false
 
 spring:
@@ -57,15 +57,6 @@ spring:
     password:
   thymeleaf:
     cache: true
-  sleuth:
-    sampler:
-      probability: 1 # report 100% of traces
-  zipkin: # Use the "zipkin" Maven profile to have the Spring Cloud Zipkin dependencies
-    base-url: http://localhost:9411
-    enabled: false
-    locator:
-      discovery:
-        enabled: true
 
 # ===================================================================
 # To enable TLS in production, generate a certificate using:
@@ -111,17 +102,13 @@ jhipster:
       client-secret: internal
   mail: # specific JHipster mail property, for standard properties see MailProperties
     base-url: http://my-server-url-to-change # Modify according to your server's URL
-  metrics:
-    logs: # Reports metrics in the logs
-      enabled: false
-      report-frequency: 60 # in seconds
   logging:
     use-json-format: false # By default, logs are not in Json format
     logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
       enabled: false
       host: localhost
       port: 5000
-      queue-size: 512
+      ring-buffer-size: 512
   audit-events:
     retention-period: 30 # Number of days before audit events are deleted.
 oauth2:
