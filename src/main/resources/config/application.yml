@@ -104,6 +104,8 @@ spring:
       # keep how Hibernate 5 stored OffsetDateTime / Instant: normalized to UTC in a TIMESTAMP column
       hibernate.timezone.default_storage: NORMALIZE
       hibernate.type.preferred_instant_jdbc_type: TIMESTAMP
+      # as before the migration: no global temporary table (HTE_*) is created in the schema at startup on Oracle
+      hibernate.query.mutation_strategy.global_temporary.create_tables: false
       hibernate.connection.provider_disables_autocommit: true
       hibernate.cache.use_second_level_cache: false
       hibernate.cache.use_query_cache: false
