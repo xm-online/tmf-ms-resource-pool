@@ -73,6 +73,7 @@ spring:
   cloud:
     consul:
       discovery:
+        query-passing: true
         healthCheckPath: /management/health
         instanceId: resourcepool:${spring.application.instance-id:${random.value}}
         service-name: resourcepool
