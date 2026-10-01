@@ -1,22 +1,23 @@
 package com.icthh.xm.tmf.ms.resourcepool.config;
 
-import io.github.jhipster.config.JHipsterConstants;
-import io.github.jhipster.config.JHipsterProperties;
-import io.github.jhipster.config.h2.H2ConfigurationHelper;
+import tech.jhipster.config.JHipsterConstants;
+import tech.jhipster.config.JHipsterProperties;
+import tech.jhipster.config.h2.H2ConfigurationHelper;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.web.server.*;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
-import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import javax.servlet.*;
+import jakarta.servlet.*;
 
 /**
  * Configuration of web application with Servlet 3.0 APIs.
@@ -50,14 +51,39 @@ public class WebConfigurer implements ServletContextInitializer {
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = jHipsterProperties.getCors();
-        if (config.getAllowedOrigins() != null && !config.getAllowedOrigins().isEmpty()) {
+        CorsConfiguration config = withLegacyWildcardOrigin(jHipsterProperties.getCors());
+        if (!CollectionUtils.isEmpty(config.getAllowedOrigins())
+            || !CollectionUtils.isEmpty(config.getAllowedOriginPatterns())) {
             log.debug("Registering CORS filter");
             source.registerCorsConfiguration("/api/**", config);
             source.registerCorsConfiguration("/management/**", config);
-            source.registerCorsConfiguration("/v2/api-docs", config);
+            source.registerCorsConfiguration("/v3/api-docs", config);
         }
         return new CorsFilter(source);
+    }
+
+    /**
+     * Spring 5.3+ rejects {@code allowed-origins: "*"} together with {@code allow-credentials: true}, which Spring 5.2
+     * accepted (it echoed the request origin). The same configuration keeps working: the wildcard is moved to
+     * {@code allowedOriginPatterns}, which answers with the request origin as before.
+     */
+    private static CorsConfiguration withLegacyWildcardOrigin(CorsConfiguration source) {
+        List<String> origins = source.getAllowedOrigins();
+        if (CollectionUtils.isEmpty(origins) || !origins.contains(CorsConfiguration.ALL)
+            || !Boolean.TRUE.equals(source.getAllowCredentials())) {
+            return source;
+        }
+        CorsConfiguration config = new CorsConfiguration(source);
+        List<String> patterns = new ArrayList<>();
+        if (source.getAllowedOriginPatterns() != null) {
+            patterns.addAll(source.getAllowedOriginPatterns());
+        }
+        patterns.add(CorsConfiguration.ALL);
+        List<String> rest = new ArrayList<>(origins);
+        rest.remove(CorsConfiguration.ALL);
+        config.setAllowedOrigins(rest.isEmpty() ? null : rest);
+        config.setAllowedOriginPatterns(patterns);
+        return config;
     }
 
     /**
