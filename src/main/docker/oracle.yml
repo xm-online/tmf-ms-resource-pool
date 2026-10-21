@@ -1,0 +1,21 @@
+name: resourcepool
+services:
+    resourcepool-oracle:
+        image: gvenzl/oracle-free:23.26.3-slim-faststart
+        # volumes:
+        #     - ~/volumes/jhipster/resourcepool/oracle/:/opt/oracle/oradata
+        environment:
+            - ORACLE_PASSWORD=resourcepool
+            # the application user owns the XM_RESOURCE_POOL schema, the same one as on prod
+            - APP_USER=XM_RESOURCE_POOL
+            - APP_USER_PASSWORD=resourcepool
+        healthcheck:
+            test: [ 'CMD', 'healthcheck.sh' ]
+            interval: 10s
+            timeout: 5s
+            retries: 30
+            start_period: 10s
+        # If you want to expose these ports outside your dev PC,
+        # remove the "127.0.0.1:" prefix
+        ports:
+            - "127.0.0.1:${ORACLE_PORT}:1521"
