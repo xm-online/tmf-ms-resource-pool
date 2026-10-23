@@ -7,7 +7,7 @@ configurations {
 
 dependencies {
     developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
-    implementation "com.h2database:h2"
+    developmentOnly "org.springframework.boot:spring-boot-docker-compose"
 }
 
 def profiles = "dev"
@@ -26,6 +26,8 @@ springBoot {
 
 bootRun {
     args = []
+    systemProperty 'user.timezone', 'UTC'
+    environment 'ORACLE_PORT', '0'
 }
 
 

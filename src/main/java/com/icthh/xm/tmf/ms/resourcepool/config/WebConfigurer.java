@@ -1,8 +1,6 @@
 package com.icthh.xm.tmf.ms.resourcepool.config;
 
-import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.config.JHipsterProperties;
-import tech.jhipster.config.h2.H2ConfigurationHelper;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -11,7 +9,6 @@ import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.Profiles;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -40,10 +37,6 @@ public class WebConfigurer implements ServletContextInitializer {
     public void onStartup(ServletContext servletContext) throws ServletException {
         if (env.getActiveProfiles().length != 0) {
             log.info("Web application configuration, using profiles: {}", (Object[]) env.getActiveProfiles());
-        }
-
-        if (env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT))) {
-            initH2Console(servletContext);
         }
         log.info("Web application fully configured");
     }
@@ -85,13 +78,4 @@ public class WebConfigurer implements ServletContextInitializer {
         config.setAllowedOriginPatterns(patterns);
         return config;
     }
-
-    /**
-     * Initializes H2 console.
-     */
-    private void initH2Console(ServletContext servletContext) {
-        log.debug("Initialize H2 console");
-        H2ConfigurationHelper.initH2Console(servletContext);
-    }
-
 }

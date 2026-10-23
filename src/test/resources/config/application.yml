@@ -121,11 +121,6 @@ jhipster:
         base64-secret: NzZjNDE5MDViNjEzYzE2ODEwYjc2ZjJjNzQwNjk2NGU3NDg2ZGVkYzJjZGM2ZGQ3YjEzNmQ2NjNlOTYzZDgyOTFkYWQ5OGM1YmFhNWU5YzE0NzM3ZjA2ZDFhNDg2YzY3NjM1NGZjZjBkMGNhMGNiMGE5MzEyMzZiOTBlYzdkNDQ=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
-    client-authorization:
-      access-token-uri: http://uaa/oauth/token
-      token-service-id: uaa
-      client-id: internal
-      client-secret: internal
 
 # ===================================================================
 # Application specific properties

@@ -32,7 +32,7 @@ spring:
   devtools:
     restart:
       enabled: true
-      additional-exclude: static/**,.h2.server.properties
+      additional-exclude: static/**
     livereload:
       enabled: false # we use Webpack dev server + BrowserSync for livereload
   jackson:
@@ -46,18 +46,14 @@ spring:
       port: 8500
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:resourcepool;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: resourcepool
-    password:
+    url: jdbc:oracle:thin:@localhost:${ORACLE_PORT:1521}/freepdb1
+    username: XM_RESOURCE_POOL
+    password: resourcepool
     hikari:
       poolName: Hikari
       auto-commit: false
-  h2:
-    console:
-      enabled: false
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    database: H2
+    database: ORACLE
     show-sql: true
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
@@ -98,12 +94,6 @@ jhipster:
   #     exposed-headers: "Authorization,Link,X-Total-Count"
   #     allow-credentials: true
   #     max-age: 1800
-  security:
-    client-authorization:
-      access-token-uri: http://uaa/oauth/token
-      token-service-id: uaa
-      client-id: internal
-      client-secret: internal
   mail: # specific JHipster mail property, for standard properties see MailProperties
     base-url: http://127.0.0.1:8717
   logging:
