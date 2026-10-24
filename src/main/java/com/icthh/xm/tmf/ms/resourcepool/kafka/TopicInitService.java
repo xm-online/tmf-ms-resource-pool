@@ -1,7 +1,7 @@
 package com.icthh.xm.tmf.ms.resourcepool.kafka;
 
 import com.icthh.xm.tmf.ms.resourcepool.config.ApplicationProperties;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class TopicInitService {
     @SneakyThrows
     @PostConstruct
     public void createTopics() {
-        try (AdminClient admin = AdminClient.create(kafkaAdmin.getConfig())) {
+        try (AdminClient admin = AdminClient.create(kafkaAdmin.getConfigurationProperties())) {
 
             Set<String> existedTopics = admin
                 .listTopics(new ListTopicsOptions().listInternal(true))

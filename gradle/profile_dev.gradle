@@ -6,8 +6,8 @@ configurations {
 }
 
 dependencies {
-    developmentOnly "org.springframework.boot:spring-boot-devtools"
-    implementation "com.h2database:h2"
+    developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
+    developmentOnly "org.springframework.boot:spring-boot-docker-compose"
 }
 
 def profiles = "dev"
@@ -20,14 +20,14 @@ if (project.hasProperty("tls")) {
 
 springBoot {
     buildInfo {
-        properties {
-            time = null
-        }
+        excludes = ['time']
     }
 }
 
 bootRun {
     args = []
+    systemProperty 'user.timezone', 'UTC'
+    environment 'ORACLE_PORT', '0'
 }
 
 

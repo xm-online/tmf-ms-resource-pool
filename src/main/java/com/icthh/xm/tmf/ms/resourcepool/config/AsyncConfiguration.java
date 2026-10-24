@@ -1,6 +1,6 @@
 package com.icthh.xm.tmf.ms.resourcepool.config;
 
-import io.github.jhipster.async.ExceptionHandlingAsyncTaskExecutor;
+import tech.jhipster.async.ExceptionHandlingAsyncTaskExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
@@ -29,7 +29,9 @@ public class AsyncConfiguration implements AsyncConfigurer {
     }
 
     @Override
-    @Bean(name = "taskExecutor")
+    // "applicationTaskExecutor" is the name Spring Boot 4 and xm-commons look up; "taskExecutor" is kept for
+    // the Liquibase configuration and for any bean that injected it by that name
+    @Bean(name = {"taskExecutor", "applicationTaskExecutor"})
     public Executor getAsyncExecutor() {
         log.debug("Creating Async Task Executor");
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

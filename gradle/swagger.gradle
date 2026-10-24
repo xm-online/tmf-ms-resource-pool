@@ -4,33 +4,44 @@
  */
 buildscript {
     repositories {
-        maven { url "https://plugins.gradle.org/m2/" }
+        gradlePluginPortal()
+        mavenCentral()
     }
     dependencies {
-        classpath "org.openapitools:openapi-generator-gradle-plugin:4.2.2"
+        classpath "org.openapitools:openapi-generator-gradle-plugin:${openapiPluginVersion}"
     }
 }
+apply plugin: "org.openapi.generator"
 
-task openApiGenerateV1(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask){
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
+// generator 7 with the Boot 3+/Jakarta templates. Options that keep the JSON of the 4.x generator:
+// - generatedConstructorWithRequiredArgs: Jackson 3 deserializes through a required-args constructor, so
+//   absent fields became null instead of the model defaults, and constructor properties were written first
+// - containerDefaultToNull: generator 7 initializes optional collections with an empty list, 4.x left them null
+tasks.register("openApiGenerateV1", GenerateTask) {
     generatorName = "spring"
     inputSpec = "$rootDir/src/main/resources/swagger/api.yml".toString()
-    outputDir = "$buildDir/openapi".toString()
+    outputDir = layout.buildDirectory.dir("openapi").get().asFile.toString()
     apiPackage = "com.icthh.xm.tmf.ms.resourcepool.web.v1.api"
     modelPackage = "com.icthh.xm.tmf.ms.resourcepool.web.v1.api.model"
     apiFilesConstrainedTo = [""]
     modelFilesConstrainedTo = [""]
     supportingFilesConstrainedTo = ["ApiUtil.java"]
-    configOptions = [delegatePattern: "true"]
+    configOptions = [delegatePattern: "true", useSpringBoot3: "true", useJakartaEe: "true",
+                     generatedConstructorWithRequiredArgs: "false", containerDefaultToNull: "true"]
     validateSpec = true
-    importMappings = [Problem:"org.zalando.problem.Problem"]
+    importMappings = [Problem: "org.zalando.problem.Problem"]
 }
 
-task allOpenApiGenerate(dependsOn: [ 'openApiGenerateV1'])
+tasks.register("allOpenApiGenerate") {
+    dependsOn "openApiGenerateV1"
+}
 
 sourceSets {
     main {
         java {
-            srcDir file("${project.buildDir.path}/openapi/src/main/java")
+            srcDir file(layout.buildDirectory.dir("openapi/src/main/java").get().asFile)
         }
     }
 }

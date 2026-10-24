@@ -1,0 +1,9 @@
+# ===================================================================
+# Activate this profile to serve the API docs (springdoc: /v3/api-docs and the Swagger UI).
+# Before the migration the same profile enabled springfox (/v2/api-docs).
+# ===================================================================
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true

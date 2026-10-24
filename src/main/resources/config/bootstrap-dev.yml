@@ -1,0 +1,11 @@
+spring:
+  docker:
+    compose:
+      enabled: true
+      file: src/main/docker/oracle.yml
+      lifecycle-management: start_and_stop
+      readiness:
+        # the Oracle container needs a while to start, especially on the first run
+        timeout: 5m
+      stop:
+        command: down

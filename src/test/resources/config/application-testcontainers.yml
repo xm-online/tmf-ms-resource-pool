@@ -22,4 +22,4 @@ spring:
       poolName: Hikari
       auto-commit: false
   jpa:
-    database-platform: org.hibernate.dialect.Oracle12cDialect
+    database-platform: org.hibernate.dialect.OracleDialect
