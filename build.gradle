@@ -61,7 +61,7 @@ dependencyManagement {
 }
 
 group = "com.icthh.xm.tmf.ms.resourcepool"
-version = "5.0.0"
+version = "5.1.0"
 
 description = ""
 

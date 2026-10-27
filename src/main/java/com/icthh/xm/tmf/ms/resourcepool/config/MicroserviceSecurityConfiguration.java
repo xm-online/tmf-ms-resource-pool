@@ -1,7 +1,7 @@
 package com.icthh.xm.tmf.ms.resourcepool.config;
 
 import com.icthh.xm.commons.permission.access.XmPermissionEvaluator;
-import com.icthh.xm.commons.security.RoleConstant;
+import com.icthh.xm.commons.security.XmPermissionCheckService;
 import com.icthh.xm.commons.security.jwt.TokenProvider;
 import com.icthh.xm.commons.security.spring.config.SecurityConfiguration;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,32 +18,22 @@ public class MicroserviceSecurityConfiguration extends SecurityConfiguration {
 
     public MicroserviceSecurityConfiguration(TokenProvider tokenProvider,
                                              @Value("${jhipster.security.content-security-policy}")
-                                             String contentSecurityPolicy) {
-        super(tokenProvider, contentSecurityPolicy);
+                                             String contentSecurityPolicy,
+                                             XmPermissionCheckService permissionCheckService) {
+        super(tokenProvider, contentSecurityPolicy, permissionCheckService);
     }
 
     /**
-     * The URL rules the service had before the migration (Spring Security OAuth2 resource server):
-     * {@code /api/**} requires a token, {@code /management/health|info|prometheus} are public, the rest of
-     * {@code /management/**} requires SUPER-ADMIN. The resource server permitted requests matched by no rule
-     * (the TMF API under {@code /tmf-api} is protected by {@code @PreAuthorize} only), while Spring Security 6
-     * denies them, so the same fallback is kept. Frame options stay disabled as before.
+     * The resource server permitted requests matched by no rule (the TMF API under {@code /tmf-api} is protected
+     * by {@code @PreAuthorize} only), while Spring Security 6 denies them, so the same fallback is kept.
+     * Frame options stay disabled as before.
      */
     @Override
     protected HttpSecurity applyUrlSecurity(HttpSecurity http) {
         try {
-            return http
-                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/**").authenticated()
-                    .requestMatchers("/management/health").permitAll()
-                    .requestMatchers("/management/info").permitAll()
-                    .requestMatchers("/management/prometheus").permitAll()
-                    .requestMatchers("/management/prometheus/**").permitAll()
-                    .requestMatchers("/management/**").hasAuthority(RoleConstant.SUPER_ADMIN)
-                    .requestMatchers("/swagger-resources/configuration/ui").permitAll()
-                    .requestMatchers("/v3/api-docs/**").hasAnyAuthority(RoleConstant.SUPER_ADMIN, RoleConstant.ADMIN)
-                    .anyRequest().permitAll());
+            http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
+            super.applyUrlSecurity(http);
+            return http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
         } catch (Exception e) {
             throw new IllegalStateException("Cannot configure URL security", e);
         }
